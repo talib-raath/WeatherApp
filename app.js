@@ -1,9 +1,30 @@
-   function WeatherDetails() {
-        const city = document.getElementById("search-city").value;
-        const apiKey = "69fa95c453084c6862ae54f6a212636c"; // Replace with your actual API key
+// app.js
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function WeatherDetails() {
+    const city = document.getElementById("search-city").value;
+    if (city.length > 2) { // To avoid fetching too early
+        const apiKey = "69fa95c453084c6862ae54f6a212636c";
         fetchCurrentWeather(city, apiKey);
         fetchForecast(city, apiKey);
-      }
+    }
+}
+
+const debouncedWeatherDetails = debounce(WeatherDetails, 800);
+
+document.getElementById("search-city").addEventListener("input", debouncedWeatherDetails);
+
 
       function fetchCurrentWeather(city, apiKey) {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
