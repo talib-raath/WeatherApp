@@ -1,58 +1,78 @@
-      function WeatherDetails() {
-        var city = document.getElementById("search-city").value;
-        var apiKey = "69fa95c453084c6862ae54f6a212636c"; // Your actual OpenWeather API key
-        var url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+   function WeatherDetails() {
+        const city = document.getElementById("search-city").value;
+        const apiKey = "69fa95c453084c6862ae54f6a212636c"; // Replace with your actual API key
+        fetchCurrentWeather(city, apiKey);
+        fetchForecast(city, apiKey);
+      }
 
-        var httpRequest = new XMLHttpRequest();
+      function fetchCurrentWeather(city, apiKey) {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        const httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function () {
           if (this.readyState === 4 && this.status === 200) {
-            var response = JSON.parse(this.responseText);
-            displayForecastDetails(response);
-          } else if (this.readyState === 4) {
-            console.error("Failed to fetch forecast details.");
-            document.getElementById("forecast-details").textContent =
-              "Failed to fetch forecast details. Please try again.";
+            const data = JSON.parse(this.responseText);
+            const iconUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`; // Constructing the URL for the icon
+            document.getElementById("weather-info").innerHTML = `
+                <div class="current-weather mb-4 text-center">
+                    <h1>${data.name}</h1>
+                    <img src="${iconUrl}" alt="Weather icon" title="${data.weather[0].description}"> <!-- Weather icon -->
+                    <h2>${data.main.temp}°C</h2>
+                    <p>Description: ${data.weather[0].description}</p>
+                    <p>Humidity: ${data.main.humidity}%</p>
+                    <p>Wind Speed: ${data.wind.speed} m/s</p>
+                </div>
+            `;
           }
         };
         httpRequest.open("GET", url, true);
         httpRequest.send();
       }
 
-      function displayForecastDetails(data) {
-        var fiveDayForecastHTML = "<h2>5 Day Forecast</h2>";
-        var fiveHourForecastHTML = "<h2>Next 5 Hours Forecast</h2>";
+      function fetchForecast(city, apiKey) {
+        const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function () {
+          if (this.readyState === 4 && this.status === 200) {
+            const data = JSON.parse(this.responseText);
+            const hourlyHTML = data.list
+              .slice(0, 5)
+              .map(
+                (forecast) => `
+                <div class="forecast-item">
+                    <p>${new Date(forecast.dt_txt).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}: ${forecast.main.temp}°C, ${
+                  forecast.weather[0].description
+                }</p>
+                </div>
+            `
+              )
+              .join("");
 
-        // Logic to extract the next 5 days and 5 hourly forecasts
-        var forecasts = data.list;
-        for (var i = 0; i < forecasts.length; i++) {
-          if (i < 5) {
-            // Next 5 hours forecast
-            fiveHourForecastHTML += `
-              <div class="forecast-block">
-                <strong>${new Date(
-                  forecasts[i].dt * 1000
-                ).toLocaleTimeString()}</strong>
-                <img src="http://openweathermap.org/img/wn/${
-                  forecasts[i].weather[0].icon
-                }.png" alt="${forecasts[i].weather[0].description}" />
-                ${forecasts[i].main.temp}°C
-              </div>`;
-          }
-          if (i % 8 === 0) {
-            // 5 day forecast, one per day
-            fiveDayForecastHTML += `
-              <div class="forecast-block">
-                <strong>${new Date(
-                  forecasts[i].dt * 1000
-                ).toLocaleDateString()}</strong>
-                <img src="http://openweathermap.org/img/wn/${
-                  forecasts[i].weather[0].icon
-                }.png" alt="${forecasts[i].weather[0].description}" />
-                ${forecasts[i].main.temp}°C
-              </div>`;
-          }
-        }
+            document.getElementById(
+              "hourly-forecast"
+            ).innerHTML = `<h4>Next Today</h4>${hourlyHTML}`;
 
-        document.getElementById("forecast-details").innerHTML =
-          fiveDayForecastHTML + fiveHourForecastHTML;
+            const dailyHTML = data.list
+              .filter((_, index) => index % 8 === 0)
+              .slice(0, 5)
+              .map(
+                (forecast) => `
+                <div class="forecast-item">
+                    <p>${new Date(forecast.dt_txt).toLocaleDateString()}: ${
+                  forecast.main.temp
+                }°C, ${forecast.weather[0].description}</p>
+                </div>
+            `
+              )
+              .join("");
+
+            document.getElementById(
+              "daily-forecast"
+            ).innerHTML = `<h4>Next 5 Days</h4>${dailyHTML}`;
+          }
+        };
+        httpRequest.open("GET", url, true);
+        httpRequest.send();
       }
