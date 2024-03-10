@@ -1,5 +1,3 @@
-// app.js
-
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -12,13 +10,15 @@ function debounce(func, wait) {
     };
 }
 
+
+
 function WeatherDetails() {
     const city = document.getElementById("search-city").value;
-    if (city.length > 2) { // To avoid fetching too early
+    if (city.length > 3) { // To avoid fetching too early
         const apiKey = "69fa95c453084c6862ae54f6a212636c";
         fetchCurrentWeather(city, apiKey);
         fetchForecast(city, apiKey);
-    }
+    }                
 }
 
 const debouncedWeatherDetails = debounce(WeatherDetails, 800);
@@ -27,7 +27,8 @@ document.getElementById("search-city").addEventListener("input", debouncedWeathe
 
 
       function fetchCurrentWeather(city, apiKey) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+          const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+          
         const httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = function () {
           if (this.readyState === 4 && this.status === 200) {
@@ -96,4 +97,29 @@ document.getElementById("search-city").addEventListener("input", debouncedWeathe
         };
         httpRequest.open("GET", url, true);
         httpRequest.send();
+      }
+
+
+//current cooridinates weather
+      
+async function fetchWeather(lat, lon) {
+        const apiKey = "69fa95c453084c6862ae54f6a212636c";
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        fetchCurrentWeather(data.name, apiKey);
+        fetchForecast(data.name, apiKey);
+      }
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, null);
+        }
+      }
+
+      function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        fetchWeather(latitude, longitude);
       }
