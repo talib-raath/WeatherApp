@@ -1,38 +1,78 @@
-    body {
-        background-image: url("background.jpeg");
-        /* Replace with your background image URL */
-        background-size: cover;
-        color: #fff;
-    }
+body {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('background.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+}
 
-    .container {
-        background-color: rgba(0,
-                0,
-                0,
-                0.5);
-        /* Semi-transparent background for content */
-        padding: 20px;
-        border-radius: 8px;
-        margin-top: 20px;
-    }
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    margin: 0.5em 0;
+    color: #f1f1f1;
+}
 
-    .forecast-item {
-        background: rgba(255, 255, 255, 0.8);
-        color: #000;
-        margin: 10px 0;
-        padding: 10px;
-        border-radius: 8px;
-    }
+.search-bar input, .search-bar button {
+    border: none;
+    margin: 5px;
+    border-radius: 30px;
+    padding: 10px 15px;
+}
 
-    #weather-info {
-        display: flex;
-        justify-content: center;
-    }
+.search-bar button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+.search-bar button:hover {
+    background-color: #0056b3;
+}
 
+.container, .forecast-item {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    padding: 20px;
+}
 
-          .footer {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-          }
+/* Alignment & Display Enhancements */
+#weather-info, #hourly-forecast, #daily-forecast {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.forecast-item {
+    border: 1px solid #ffffff50;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+.forecast-item:hover {
+    transform: scale(1.05);
+    border-color: #ffffff;
+}
+
+/* Enhancements for headers of sections */
+#hourly-forecast > h4, #daily-forecast > h4 {
+    color: #ade8f4;
+    font-weight: 600;
+}
+
+.footer {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+/* Additional styling for visual appeal */
+.current-weather img {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    margin-top: 10px;
+}

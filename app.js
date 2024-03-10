@@ -17,7 +17,10 @@ function WeatherDetails() {
     if (city.length > 3) { // To avoid fetching too early
         const apiKey = "69fa95c453084c6862ae54f6a212636c";
         fetchCurrentWeather(city, apiKey);
-        fetchForecast(city, apiKey);
+      fetchForecast(city, apiKey);
+      // After fetching and processing data in `fetchCurrentWeather` and `fetchForecast`
+document.getElementById("weather-info").classList.add("visible");
+
     }                
 }
 
