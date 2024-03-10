@@ -1,0 +1,62 @@
+.details {
+        display: flex;
+        align-items: center;
+    }
+
+    body {
+        background-image: url("background.jpeg");
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    @media (min-width: 768px) {
+        body {
+            background-image: url("background.jpeg");
+        }
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        margin-top: 300px;
+        margin-left: 200px;
+    }
+
+    #search-city {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        border-radius: 20px 0 0 20px;
+        width: 250px;
+    }
+
+    button {
+        padding: 10px 15px;
+        margin-top: 0px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        background: #1e90ff;
+        color: white;
+        cursor: pointer;
+        border-radius: 0 20px 20px 0;
+        transition: background 0.3s ease;
+    }
+
+    button:hover {
+        background: #007acc;
+    }
+
+    #search-city::placeholder {
+        font-family: "Arial", sans-serif;
+        color: #999;
+    }
+
+    #search-city:focus {
+        box-shadow: 0 0 5px rgba(31, 98, 165, 0.5);
+        border: 0px solid #1e90ff;
+    }
